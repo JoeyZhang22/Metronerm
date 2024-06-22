@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named metronal
+# Target rules for targets named Metronome
 
 # Build rule for target.
-metronal: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 metronal
-.PHONY : metronal
+Metronome: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Metronome
+.PHONY : Metronome
 
 # fast build rule for target.
-metronal/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/build
-.PHONY : metronal/fast
+Metronome/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/build
+.PHONY : Metronome/fast
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -142,7 +142,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -150,7 +150,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 src/printargs.o: src/printargs.cpp.o
@@ -158,7 +158,7 @@ src/printargs.o: src/printargs.cpp.o
 
 # target to build an object file
 src/printargs.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/src/printargs.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/src/printargs.cpp.o
 .PHONY : src/printargs.cpp.o
 
 src/printargs.i: src/printargs.cpp.i
@@ -166,7 +166,7 @@ src/printargs.i: src/printargs.cpp.i
 
 # target to preprocess a source file
 src/printargs.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/src/printargs.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/src/printargs.cpp.i
 .PHONY : src/printargs.cpp.i
 
 src/printargs.s: src/printargs.cpp.s
@@ -174,7 +174,7 @@ src/printargs.s: src/printargs.cpp.s
 
 # target to generate assembly for a file
 src/printargs.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/metronal.dir/build.make CMakeFiles/metronal.dir/src/printargs.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Metronome.dir/build.make CMakeFiles/Metronome.dir/src/printargs.cpp.s
 .PHONY : src/printargs.cpp.s
 
 # Help Target
@@ -185,7 +185,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... metronal"
+	@echo "... Metronome"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
