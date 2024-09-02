@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/Users/joeyzhang/Documents/git/metronal",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/opt/homebrew/opt/libao/include -I/opt/homebrew/opt/portaudio/include -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -o CMakeFiles/Metronome.dir/src/main.cpp.o -c /Users/joeyzhang/Documents/git/metronal/src/main.cpp",
+  "file": "/Users/joeyzhang/Documents/git/metronal/src/main.cpp",
+  "output": "CMakeFiles/Metronome.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/joeyzhang/Documents/git/metronal",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/opt/homebrew/opt/libao/include -I/opt/homebrew/opt/portaudio/include -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -o CMakeFiles/Metronome.dir/src/printargs.cpp.o -c /Users/joeyzhang/Documents/git/metronal/src/printargs.cpp",
+  "file": "/Users/joeyzhang/Documents/git/metronal/src/printargs.cpp",
+  "output": "CMakeFiles/Metronome.dir/src/printargs.cpp.o"
+}
+]

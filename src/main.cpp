@@ -1,81 +1,70 @@
-#include <iostream>
-#include <thread>
-#include <chrono>
-#include <string>
-#include <csignal>
-#include <ao/ao.h>
-#include <sndfile.h>
 #include "printargs.h"
+#include <ao/ao.h>
+#include <chrono>
+#include <csignal>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <thread>
 
-// #define std_bpm_ms 60000
-
-// Dummy function to simulate playing a sound
-void playSound(const std::string &soundFile, int threadnum)
-{
-
-  std::cout << "i am thread: " << threadnum << std::endl;
+// Function to generate and play a simple sine wave beep
+void playBeep(const bool &isTick) {
   // Initialize libao
   ao_initialize();
 
-  // Setup format for the audio file
+  // Setup format for the audio
   ao_sample_format format;
   format.bits = 16;
-  format.channels = 2;
-  format.rate = 44100;
-  format.byte_format = AO_FMT_LITTLE;
+  format.channels = 2; // Stereo
+  format.rate = 48000; // 48 kHz
+  format.byte_format = AO_FMT_NATIVE;
+  format.matrix = strdup("L,R");
 
   // Open the default driver
   int default_driver = ao_default_driver_id();
   ao_device *device = ao_open_live(default_driver, &format, nullptr);
-  if (device == nullptr)
-  {
+  if (device == nullptr) {
     std::cerr << "Error opening audio device" << std::endl;
     ao_shutdown();
     return;
   }
 
-  // Read the sound file
-  FILE *file = fopen(soundFile.c_str(), "rb");
-  if (file == nullptr)
-  {
-    std::cerr << "Error opening sound file: " << soundFile << std::endl;
-    ao_close(device);
-    ao_shutdown();
-    return;
+  // Parameters for the beep sound
+  double frequency = isTick ? 880.0 : 440.0; // Tick: 880 Hz, Tock: 440 Hz
+  double duration = 0.1;                     // 100 milliseconds
+  int num_samples = static_cast<int>(duration * format.rate);
+  short *buffer = new short[num_samples * format.channels];
+
+  // Generate sine wave
+  for (int i = 0; i < num_samples; ++i) {
+    double sample = sin(2.0 * M_PI * frequency * i / format.rate);
+    short sample_value =
+        static_cast<short>(sample * 32767); // Max amplitude for 16-bit audio
+    buffer[i * 2] = sample_value;           // Left channel
+    buffer[i * 2 + 1] = sample_value;       // Right channel
   }
 
-  // Allocate buffer for reading
-  const int bufferSize = 4096;
-  char buffer[bufferSize];
-  int bytesRead = 0;
+  // Play the generated sound
+  ao_play(device, reinterpret_cast<char *>(buffer),
+          num_samples * format.channels * sizeof(short));
 
-  // Playback loop
-  while ((bytesRead = fread(buffer, sizeof(char), bufferSize, file)) > 0)
-  {
-    ao_play(device, buffer, bytesRead);
-  }
-
-  // Close file and device
-  fclose(file);
+  // Clean up
+  delete[] buffer;
   ao_close(device);
   ao_shutdown();
 }
 
 // Signal handler function
 volatile sig_atomic_t running = 1;
-void signalHandler(int signal)
-{
+void signalHandler(int signal) {
   std::cout << "Stopping Metronome..." << std::endl;
   running = 0;
 }
 
-int main(int argc, char *argv[])
-{
-
-  print_terminal_args(argc, argv);
-
-  if (argc < 2)
-  {
+int main(int argc, char *argv[]) {
+  // print_terminal_args(argc, argv);
+  if (argc < 2 || std::strcmp(argv[1], "--help") == 0 ||
+      std::strcmp(argv[1], "-h") == 0) {
     std::cerr << "Basic Usage: " << argv[0] << " <bpm>" << std::endl;
     std::cerr << "Usage: " << argv[0] << " [OPTION]" << std::endl;
     std::cerr << "[OPTION]: --help " << std::endl;
@@ -92,15 +81,13 @@ int main(int argc, char *argv[])
 
   std::thread soundthread;
 
-  while (running)
-  {
-    if (soundthread.joinable())
-    {
+  while (running) {
+    if (soundthread.joinable()) {
       soundthread.join();
     }
 
-    soundthread = std::thread([&]
-                              { playSound("tick.wav", ticker % 2); });
+    bool tickOrToc = ticker % 2 ? true : false;
+    soundthread = std::thread([&] { playBeep(tickOrToc); });
 
     std::cout << tick_chars[ticker % 2] << "\r" << std::flush;
 
