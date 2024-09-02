@@ -1,4 +1,4 @@
-# Install script for directory: /Users/joeyzhang/Documents/git/metronal
+# Install script for directory: /Users/joeyzhang/Documents/git/term-metronome
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/joeyzhang/Documents/git/metronal/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/joeyzhang/Documents/git/term-metronome/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
