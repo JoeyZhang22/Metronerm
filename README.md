@@ -27,7 +27,7 @@ brew install libao
 ```
 
 ### Building Metronerm
-`The CMakeLists.txt in this project is created for MacOs. If you are on Linux or Windows, you will need to ensure that you specify your local path to your Libao library.` 
+`The CMakeLists.txt in this project is created for MacOs. If you are on Linux or Windows, please specify the local path to your Libao library and update the CMakeLists.txt file before building.` 
 Once you have the prerequisites, you are ready to build your own copy of Metronerm:
 ```bash
 cmake .
