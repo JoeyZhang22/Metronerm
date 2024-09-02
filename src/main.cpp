@@ -1,4 +1,3 @@
-#include "printargs.h"
 #include <ao/ao.h>
 #include <chrono>
 #include <csignal>
@@ -7,8 +6,15 @@
 #include <string>
 #include <thread>
 
+enum class argExitValue
+{
+  app_continue = 0,
+  app_end_early = 1,
+};
+
 // Function to generate and play a simple sine wave beep
-void playBeep(const bool &isTick) {
+void playBeep(const bool &isTick)
+{
   // Initialize libao
   ao_initialize();
 
@@ -23,7 +29,8 @@ void playBeep(const bool &isTick) {
   // Open the default driver
   int default_driver = ao_default_driver_id();
   ao_device *device = ao_open_live(default_driver, &format, nullptr);
-  if (device == nullptr) {
+  if (device == nullptr)
+  {
     std::cerr << "Error opening audio device" << std::endl;
     ao_shutdown();
     return;
@@ -36,7 +43,8 @@ void playBeep(const bool &isTick) {
   short *buffer = new short[num_samples * format.channels];
 
   // Generate sine wave
-  for (int i = 0; i < num_samples; ++i) {
+  for (int i = 0; i < num_samples; ++i)
+  {
     double sample = sin(2.0 * M_PI * frequency * i / format.rate);
     short sample_value =
         static_cast<short>(sample * 32767); // Max amplitude for 16-bit audio
@@ -56,38 +64,68 @@ void playBeep(const bool &isTick) {
 
 // Signal handler function
 volatile sig_atomic_t running = 1;
-void signalHandler(int signal) {
+void signalHandler(int signal)
+{
   std::cout << "Stopping Metronome..." << std::endl;
   running = 0;
 }
 
-int main(int argc, char *argv[]) {
-  // print_terminal_args(argc, argv);
-  if (argc < 2 || std::strcmp(argv[1], "--help") == 0 ||
-      std::strcmp(argv[1], "-h") == 0) {
-    std::cerr << "Basic Usage: " << argv[0] << " <bpm>" << std::endl;
+// Args handler
+argExitValue argHandler(const int &argc, char *argv[])
+{
+  // Less than 2 args and Help Menu
+  if (argc < 2 || std::strcmp(argv[1], "-h") == 0 ||
+      std::strcmp(argv[1], "--help") == 0)
+  {
+    std::cerr << "Usage: " << argv[0] << " <bpm>" << std::endl;
     std::cerr << "Usage: " << argv[0] << " [OPTION]" << std::endl;
-    std::cerr << "[OPTION]: --help " << std::endl;
-    return 1;
+    std::cerr << "[OPTION]: --help, -h" << std::endl;
+    std::cout << "<Ctrl+C> to stop" << std::endl;
+    return argExitValue::app_end_early;
   }
 
-  // Set up signal handler for Ctrl+C
-  signal(SIGINT, signalHandler);
+  // Invalid option usage
+  try
+  {
+    std::stoi(argv[1]);
+  }
+  catch (std::exception &err)
+  {
+    std::cerr << "Invalid Usage!" << std::endl;
+    std::cerr << "[OPTION]: --help, -h" << std::endl;
+    return argExitValue::app_end_early;
+  }
+  return argExitValue::app_continue;
+}
 
-  const int bpm = std::stoi(argv[1]);
-  const int std_bpm_ms = 60000;
+int main(int argc, char *argv[])
+{
+  // Handle input arguments
+  if (argHandler(argc, argv) == argExitValue::app_end_early)
+  {
+    return 0;
+  }
+
+  // Setup Routine
+  signal(SIGINT, signalHandler); // Set up signal handler for Ctrl+C
+
+  const static int bpm = std::abs(std::stoi(argv[1]));
+  const static int std_bpm_ms = 60000;
   int ticker = 0;
   const char *tick_chars = "\\/";
-
   std::thread soundthread;
 
-  while (running) {
-    if (soundthread.joinable()) {
+  // Routine for Metronome beeps
+  while (running)
+  {
+    if (soundthread.joinable())
+    {
       soundthread.join();
     }
 
     bool tickOrToc = ticker % 2 ? true : false;
-    soundthread = std::thread([&] { playBeep(tickOrToc); });
+    soundthread = std::thread([&]
+                              { playBeep(tickOrToc); });
 
     std::cout << tick_chars[ticker % 2] << "\r" << std::flush;
 

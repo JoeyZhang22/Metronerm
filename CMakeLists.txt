@@ -1,41 +1,40 @@
-# # Minimum required version of CMake
+# Minimum required version of CMake
 cmake_minimum_required(VERSION 3.10)
 
 # Project name
-project(Metronome)
+project(Metronerm)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find and include libao
-find_path(LIBAO_INCLUDE_DIR ao/ao.h
+# Find libao
+find_path(LIBAO_INCLUDE_DIR NAMES ao/ao.h
     PATH_SUFFIXES include
     HINTS /opt/homebrew/opt/libao
 )
 
-find_path(PORTAUDIO_INCLUDE_DIR portaudio.h
-    PATH_SUFFIXES include
-    HINTS /opt/homebrew/opt/portaudio
+find_library(LIBAO_LIBRARIES NAMES ao
+    HINTS /opt/homebrew/opt/libao/lib
 )
 
-# Include directories for libao and portaudio
+# Check if libao was found
+if (NOT LIBAO_INCLUDE_DIR OR NOT LIBAO_LIBRARIES)
+    message(FATAL_ERROR "libao not found. Please install libao.")
+endif()
+
+# Include directories for libao
 include_directories(${LIBAO_INCLUDE_DIR})
-include_directories(${PORTAUDIO_INCLUDE_DIR})
 
 # Add all source files in the 'src' directory to the variable 'SOURCES'
 file(GLOB SOURCES "src/*.cpp")
 
 # Add the executable
-add_executable(Metronome ${SOURCES})
+add_executable(Metronerm ${SOURCES})
 
 # Link libraries
-find_library(LIBAO_LIBRARIES NAMES ao
-    HINTS /opt/homebrew/opt/libao/lib
-)
+target_link_libraries(Metronerm ${LIBAO_LIBRARIES})
 
-find_library(PORTAUDIO_LIBRARIES NAMES portaudio
-    HINTS /opt/homebrew/opt/portaudio/lib
-)
-
-target_link_libraries(Metronome ${LIBAO_LIBRARIES} ${PORTAUDIO_LIBRARIES})
+# Optional: Print the paths to the libraries and includes found
+message(STATUS "Using libao include dir: ${LIBAO_INCLUDE_DIR}")
+message(STATUS "Using libao library: ${LIBAO_LIBRARIES}")
